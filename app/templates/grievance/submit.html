@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+
+{% block title %}Submit Grievance{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow rounded-4">
+            <div class="card-header bg-primary text-white rounded-top-4 py-3 px-4">
+                <h4 class="mb-0 fw-bold"><i class="bi bi-camera2"></i> Submit New Grievance</h4>
+                <p class="mb-0 small opacity-75">Step 1: Capture photo &rarr; Step 2: Enter details</p>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" id="grievanceForm" novalidate>
+                    {{ form.hidden_tag() }}
+
+                    <!-- STEP 1: CAMERA CAPTURE -->
+                    <div class="mb-4">
+                        <h5 class="fw-bold mb-3"><span class="badge bg-primary me-2">Step 1</span>Capture Photo Evidence</h5>
+                        <div class="alert alert-info small">
+                            <i class="bi bi-exclamation-circle"></i>
+                            <strong>Mandatory:</strong> You must capture a photo using your camera. Gallery/file upload is not allowed.
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="bg-dark rounded-3 p-2 text-center">
+                                    <video id="cameraPreview" autoplay playsinline muted
+                                           style="width:100%; border-radius:0.5rem; min-height:240px; background:#000;"></video>
+                                    <div id="cameraOff" class="text-white-50 small py-5">
+                                        <i class="bi bi-camera-video-off display-4"></i><br>
+                                        <span>Camera preview appears here</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="bg-light border rounded-3 p-2 text-center">
+                                    <canvas id="photoCanvas" style="display:none; width:100%; border-radius:0.5rem;"></canvas>
+                                    <img id="photoPreview" style="display:none; width:100%; border-radius:0.5rem;" alt="captured">
+                                    <div id="noPhoto" class="text-muted small py-5">
+                                        <i class="bi bi-image display-4 opacity-25"></i><br>
+                                        <span>Captured photo appears here</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex flex-wrap gap-2 mt-3">
+                            <button type="button" id="startCameraBtn" class="btn btn-outline-primary">
+                                <i class="bi bi-camera-video"></i> Start Camera
+                            </button>
+                            <button type="button" id="captureBtn" class="btn btn-success" disabled>
+                                <i class="bi bi-camera"></i> Capture
+                            </button>
+                            <button type="button" id="retakeBtn" class="btn btn-warning" disabled>
+                                <i class="bi bi-arrow-counterclockwise"></i> Retake
+                            </button>
+                            <button type="button" id="stopCameraBtn" class="btn btn-outline-secondary" disabled>
+                                <i class="bi bi-camera-video-off"></i> Stop Camera
+                            </button>
+                        </div>
+
+                        <div id="cameraError" class="alert alert-danger mt-3 small" style="display:none;"></div>
+                        {{ form.image_data(id="imageDataField") }}
+                    </div>
+
+                    <!-- STEP 2: COMPLAINT DETAILS -->
+                    <hr>
+                    <div class="mb-3">
+                        <h5 class="fw-bold mb-3"><span class="badge bg-success me-2">Step 2</span>Complaint Details</h5>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-medium">{{ form.complaint_text.label.text }} <span class="text-danger">*</span></label>
+                            {{ form.complaint_text(class="form-control" + (" is-invalid" if form.complaint_text.errors else ""), rows=4, placeholder="Describe your complaint in detail (min 10 characters)...") }}
+                            {% for err in form.complaint_text.errors %}<div class="invalid-feedback">{{ err }}</div>{% endfor %}
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-medium">{{ form.citizen_category.label.text }} <span class="text-danger">*</span></label>
+                                {{ form.citizen_category(class="form-select" + (" is-invalid" if form.citizen_category.errors else "")) }}
+                                {% for err in form.citizen_category.errors %}<div class="invalid-feedback">{{ err }}</div>{% endfor %}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-medium">{{ form.citizen_priority.label.text }} <span class="text-danger">*</span></label>
+                                {{ form.citizen_priority(class="form-select" + (" is-invalid" if form.citizen_priority.errors else "")) }}
+                                {% for err in form.citizen_priority.errors %}<div class="invalid-feedback">{{ err }}</div>{% endfor %}
+                                <div class="form-text">This is only a suggestion. Final priority is set by an officer.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="{{ url_for('dashboard.citizen') }}" class="btn btn-outline-secondary px-4">Cancel</a>
+                        {{ form.submit(class="btn btn-primary px-5 fw-medium") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/camera_capture.js') }}"></script>
+{% endblock %}

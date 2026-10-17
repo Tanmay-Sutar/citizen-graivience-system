@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %}Officer / Co-Officer Registration{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="card border-0 shadow-lg rounded-4">
+            <div class="card-header bg-success text-white rounded-top-4 py-3 px-5">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-person-badge-fill display-5 me-3"></i>
+                    <div>
+                        <h3 class="mb-0 fw-bold">Officer Registration</h3>
+                        <p class="mb-0 opacity-75 small">Request access (requires Main Authority approval)</p>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-5">
+                <form method="POST" novalidate>
+                    {{ form.hidden_tag() }}
+
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">{{ form.name.label.text }} <span class="text-danger">*</span></label>
+                        {{ form.name(class="form-control" + (" is-invalid" if form.name.errors else ""), placeholder="Full name") }}
+                        {% for err in form.name.errors %}<div class="invalid-feedback">{{ err }}</div>{% endfor %}
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-medium">{{ form.email.label.text }} <span class="text-danger">*</span></label>
+                            {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else ""), placeholder="official@email.com") }}
+                            {% for err in form.email.errors %}<div class="invalid-feedback">{{ err }}</div>{% endfor %}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-medium">{{ form.mobile.label.text }} <span class="text-danger">*</span></label>
+                            {{ form.mobile(class="form-control" + (" is-invalid" if form.mobile.errors else ""), placeholder="10-digit mobile") }}
+                            {% for err in form.mobile.errors %}<div class="invalid-feedback">{{ err }}</div>{% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-medium">{{ form.password.label.text }} <span class="text-danger">*</span></label>
+                            {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else "")) }}
+                            {% for err in form.password.errors %}<div class="invalid-feedback">{{ err }}</div>{% endfor %}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-medium">{{ form.confirm_password.label.text }} <span class="text-danger">*</span></label>
+                            {{ form.confirm_password(class="form-control" + (" is-invalid" if form.confirm_password.errors else "")) }}
+                            {% for err in form.confirm_password.errors %}<div class="invalid-feedback">{{ err }}</div>{% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">{{ form.role.label.text }} <span class="text-danger">*</span></label>
+                        {{ form.role(class="form-select" + (" is-invalid" if form.role.errors else "")) }}
+                        {% for err in form.role.errors %}<div class="invalid-feedback">{{ err }}</div>{% endfor %}
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label fw-medium">{{ form.department.label.text }} <span class="text-danger">*</span></label>
+                            {{ form.department(class="form-select" + (" is-invalid" if form.department.errors else "")) }}
+                            {% for err in form.department.errors %}<div class="invalid-feedback">{{ err }}</div>{% endfor %}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-medium">{{ form.area.label.text }} <span class="text-danger">*</span></label>
+                            {{ form.area(class="form-control" + (" is-invalid" if form.area.errors else ""), placeholder="e.g., North Ward, Downtown") }}
+                            {% for err in form.area.errors %}<div class="invalid-feedback">{{ err }}</div>{% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info small">
+                        <i class="bi bi-info-circle"></i>
+                        After submitting, your account will be reviewed by the Main Authority. You will be able to log in once approved.
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{ url_for('auth.login') }}" class="btn btn-outline-secondary px-4">Cancel</a>
+                        {{ form.submit(class="btn btn-success px-5 fw-medium") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

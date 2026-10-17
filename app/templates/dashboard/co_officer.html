@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import status_badge, priority_badge %}
+
+{% block title %}Co-Officer Dashboard{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card bg-info text-white border-0 rounded-4">
+            <div class="card-body p-4 d-flex flex-wrap justify-content-between align-items-center">
+                <div>
+                    <h2 class="fw-bold mb-1"><i class="bi bi-people"></i> Co-Officer — {{ user.name }}</h2>
+                    <p class="mb-0 opacity-90">Department: <strong>{{ user.department.name if user.department else '—' }}</strong></p>
+                </div>
+                <a href="{{ url_for('chat.department_chat') }}" class="btn btn-light text-info"><i class="bi bi-chat-dots"></i> Department Chat</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3"><div class="card border-0 shadow-sm"><div class="card-body"><p class="text-muted small mb-1">Total</p><h3 class="fw-bold mb-0">{{ grievances|length }}</h3></div></div></div>
+    <div class="col-md-3"><div class="card border-0 shadow-sm"><div class="card-body"><p class="text-muted small mb-1">Pending Verify</p><h3 class="fw-bold mb-0 text-warning">{{ pending_verify|length }}</h3></div></div></div>
+    <div class="col-md-3"><div class="card border-0 shadow-sm"><div class="card-body"><p class="text-muted small mb-1">In Progress</p><h3 class="fw-bold mb-0 text-primary">{{ in_progress|length }}</h3></div></div></div>
+    <div class="col-md-3"><div class="card border-0 shadow-sm"><div class="card-body"><p class="text-muted small mb-1">Resolved</p><h3 class="fw-bold mb-0 text-success">{{ resolved|length }}</h3></div></div></div>
+</div>
+
+{% if pending_verify %}
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+    <div class="card-header bg-warning-subtle border-bottom py-3 px-4"><h5 class="mb-0 fw-bold text-warning"><i class="bi bi-exclamation-triangle"></i> Awaiting Verification</h5></div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0 align-middle">
+                <thead class="bg-light"><tr><th>ID</th><th>Complaint</th><th>Citizen Priority</th><th>Status</th><th></th></tr></thead>
+                <tbody>
+                {% for g in pending_verify %}
+                <tr>
+                    <td><span class="fw-bold text-primary">{{ g.grievance_id }}</span></td>
+                    <td class="small">{{ g.complaint_text[:60] }}...</td>
+                    <td>{{ priority_badge(g.citizen_priority) }}</td>
+                    <td>{{ status_badge(g.status) }}</td>
+                    <td><a class="btn btn-success btn-sm" href="{{ url_for('grievance.verify', grievance_id=g.grievance_id) }}"><i class="bi bi-check2-square"></i> Verify &amp; Assign</a></td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="card border-0 shadow-sm rounded-4">
+    <div class="card-header bg-white border-bottom py-3 px-4"><h5 class="mb-0 fw-bold"><i class="bi bi-building"></i> Department Grievances</h5></div>
+    <div class="card-body p-0">
+        {% if grievances %}
+        <div class="table-responsive">
+            <table class="table table-hover mb-0 align-middle">
+                <thead class="bg-light"><tr><th>ID</th><th>Complaint</th><th>Category</th><th>Priority</th><th>Status</th><th>Officer</th><th></th></tr></thead>
+                <tbody>
+                {% for g in grievances %}
+                <tr>
+                    <td><span class="fw-bold text-primary">{{ g.grievance_id }}</span></td>
+                    <td class="small">{{ g.complaint_text[:60] }}...</td>
+                    <td>{{ g.final_category if g.final_category != 'Pending Verification' else g.citizen_category }}</td>
+                    <td>{{ priority_badge(g.final_priority if g.final_priority != 'Pending Verification' else g.citizen_priority) }}</td>
+                    <td>{{ status_badge(g.status) }}</td>
+                    <td class="small">{{ g.assigned_officer.name if g.assigned_officer else '—' }}</td>
+                    <td>
+                        <a class="btn btn-outline-primary btn-sm" href="{{ url_for('grievance.detail', grievance_id=g.grievance_id) }}"><i class="bi bi-eye"></i></a>
+                        <a class="btn btn-outline-success btn-sm" href="{{ url_for('grievance.verify', grievance_id=g.grievance_id) }}"><i class="bi bi-check2-square"></i></a>
+                        <a class="btn btn-outline-info btn-sm" href="{{ url_for('chat.grievance_thread', grievance_id=g.grievance_id) }}"><i class="bi bi-chat"></i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center p-5 text-muted">No department grievances.</div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

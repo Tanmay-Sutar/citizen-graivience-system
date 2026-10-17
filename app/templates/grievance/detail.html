@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import status_badge, priority_badge %}
+
+{% block title %}Grievance {{ g.grievance_id }}{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-header bg-white border-bottom py-3 px-4 d-flex flex-wrap justify-content-between align-items-center">
+                <div>
+                    <h4 class="fw-bold mb-0">{{ g.grievance_id }}</h4>
+                    <small class="text-muted">
+                        Submitted {{ g.created_at.strftime('%Y-%m-%d %H:%M') }} by {{ g.citizen.name }}
+                    </small>
+                </div>
+                <div>{{ status_badge(g.status) }}</div>
+            </div>
+            <div class="card-body p-4">
+                <div class="mb-3">
+                    <img src="{{ g.image_path }}" class="img-fluid rounded-3 w-100 border" alt="Evidence photo"
+                         style="max-height:420px; object-fit:cover;">
+                    <div class="text-muted small mt-1"><i class="bi bi-camera"></i> Camera evidence (captured at submission)</div>
+                </div>
+
+                <h6 class="fw-bold mb-2"><i class="bi bi-file-text"></i> Complaint</h6>
+                <div class="p-3 bg-light rounded-3 mb-4">{{ g.complaint_text }}</div>
+
+                <div class="row g-3">
+                    <div class="col-sm-4">
+                        <div class="p-3 border rounded-3 bg-white">
+                            <div class="text-muted small">Citizen Category</div>
+                            <div class="fw-bold">{{ g.citizen_category }}</div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="p-3 border rounded-3 bg-white">
+                            <div class="text-muted small">ML Suggested Category</div>
+                            <div class="fw-bold">{{ g.ml_category or '—' }}
+                                {% if g.ml_category_confidence %}<small class="text-muted">({{ '%0.1f'|format(g.ml_category_confidence*100) }}%)</small>{% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="p-3 border rounded-3 bg-white">
+                            <div class="text-muted small">Final Category</div>
+                            <div class="fw-bold text-primary">{{ g.final_category }}</div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                        <div class="p-3 border rounded-3 bg-white">
+                            <div class="text-muted small">Citizen Priority</div>
+                            <div>{{ priority_badge(g.citizen_priority) }}</div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="p-3 border rounded-3 bg-white">
+                            <div class="text-muted small">ML Suggested Priority</div>
+                            <div>
+                                {{ priority_badge(g.ml_priority) if g.ml_priority else '—' }}
+                                {% if g.ml_priority_confidence %}<small class="text-muted">({{ '%0.1f'|format(g.ml_priority_confidence*100) }}%)</small>{% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="p-3 border rounded-3 bg-white">
+                            <div class="text-muted small">Final Priority</div>
+                            <div>{{ priority_badge(g.final_priority) }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-3 mt-3">
+                    <div class="col-sm-6">
+                        <div class="p-3 border rounded-3 bg-white">
+                            <div class="text-muted small">Department</div>
+                            <div class="fw-bold">{{ g.department.name if g.department else 'Unassigned' }}</div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="p-3 border rounded-3 bg-white">
+                            <div class="text-muted small">Assigned Officer</div>
+                            <div class="fw-bold">{{ g.assigned_officer.name if g.assigned_officer else 'Unassigned' }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                {% if g.expected_resolution_time %}
+                <div class="mt-3 p-3 border rounded-3 bg-light">
+                    <i class="bi bi-hourglass-split"></i>
+                    Expected resolution: <strong>{{ g.expected_resolution_time.strftime('%Y-%m-%d %H:%M') }}</strong>
+                    {% if g.resolved_at %}<br><i class="bi bi-check-circle text-success"></i> Resolved: {{ g.resolved_at.strftime('%Y-%m-%d %H:%M') }}{% endif %}
+                </div>
+                {% endif %}
+
+                {% if current_user.role in ['officer', 'co_officer'] and g.status not in ['Resolved','Rejected'] %}
+                <div class="mt-3 p-3 border rounded-3 bg-success-subtle">
+                    <h6 class="fw-bold"><i class="bi bi-arrow-repeat text-success"></i> Update Status / Progress</h6>
+                    <form method="POST" action="{{ url_for('grievance.update_status', grievance_id=g.grievance_id) }}" class="row g-2">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <div class="col-md-4">
+                            <select name="status" class="form-select form-select-sm" required>
+                                <option value="">Select new status...</option>
+                                {% for s in ['Submitted','Assigned','In Progress','Need More Information','Resolved','Rejected'] %}
+                                <option value="{{ s }}" {% if s==g.status %}selected{% endif %}>{{ s }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" name="update_note" class="form-control form-control-sm" placeholder="Work update / note (required)" required minlength="3" maxlength="1000">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-success btn-sm w-100"><i class="bi bi-check"></i> Update</button>
+                        </div>
+                    </form>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-5">
+        <div class="card border-0 shadow-sm rounded-4 sticky-top" style="top:1rem;">
+            <div class="card-header bg-white border-bottom py-3 px-4">
+                <h5 class="mb-0 fw-bold"><i class="bi bi-clock-history"></i> Timeline</h5>
+            </div>
+            <div class="card-body p-4" style="max-height:600px; overflow-y:auto;">
+                {% if g.timeline %}
+                <div class="timeline">
+                    {% for t in g.timeline %}
+                    <div class="timeline-item mb-4 pb-4 border-bottom last-border-none">
+                        <div class="d-flex justify-content-between mb-1">
+                            <strong>{{ t.status_to or 'Update' }}</strong>
+                            <small class="text-muted">{{ t.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+                        </div>
+                        {% if t.update_note %}<div class="small">{{ t.update_note }}</div>{% endif %}
+                        {% if t.updated_by %}
+                        <small class="text-muted">by {{ t.updated_by.name }} ({{ t.updated_by.role.replace('_',' ')|title }})</small>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-muted text-center py-4">No updates yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .timeline-item:last-child { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
+</style>
+{% endblock %}

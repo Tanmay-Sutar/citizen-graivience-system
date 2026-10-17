@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}Statistics Dashboard{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold mb-2 mb-md-0"><i class="bi bi-bar-chart text-primary"></i> Statistics Dashboard</h3>
+    {% if current_user.is_admin %}
+    <a href="{{ url_for('admin_panel.index') }}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Back to Panel</a>
+    {% endif %}
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3"><div class="card border-0 shadow-sm"><div class="card-body"><p class="text-muted small mb-1">Total</p><h3 class="fw-bold mb-0">{{ total }}</h3></div></div></div>
+    <div class="col-md-3"><div class="card border-0 shadow-sm"><div class="card-body"><p class="text-muted small mb-1">Pending</p><h3 class="fw-bold mb-0 text-warning">{{ pending }}</h3></div></div></div>
+    <div class="col-md-3"><div class="card border-0 shadow-sm"><div class="card-body"><p class="text-muted small mb-1">In Progress</p><h3 class="fw-bold mb-0 text-primary">{{ in_progress }}</h3></div></div></div>
+    <div class="col-md-3"><div class="card border-0 shadow-sm"><div class="card-body"><p class="text-muted small mb-1">Resolved</p><h3 class="fw-bold mb-0 text-success">{{ resolved }}</h3></div></div></div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-6"><div class="card border-0 shadow-sm"><div class="card-body"><h6 class="fw-bold">Status Distribution</h6><canvas id="statusChart"></canvas></div></div></div>
+    <div class="col-md-6"><div class="card border-0 shadow-sm"><div class="card-body"><h6 class="fw-bold">Priority Distribution</h6><canvas id="priorityChart"></canvas></div></div></div>
+    <div class="col-md-6"><div class="card border-0 shadow-sm"><div class="card-body"><h6 class="fw-bold">Category Distribution</h6><canvas id="categoryChart"></canvas></div></div></div>
+    <div class="col-md-6"><div class="card border-0 shadow-sm"><div class="card-body"><h6 class="fw-bold">Department Distribution</h6><canvas id="deptChart"></canvas></div></div></div>
+</div>
+
+<div class="card border-0 shadow-sm rounded-4">
+    <div class="card-header bg-white border-bottom py-3 px-4"><h5 class="mb-0 fw-bold"><i class="bi bi-people"></i> Officer Performance</h5></div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0 align-middle">
+                <thead class="bg-light"><tr><th>Officer</th><th>Dept</th><th>Total</th><th>Resolved</th><th>Pending</th><th>Credits</th><th>Level</th></tr></thead>
+                <tbody>
+                {% for o in officer_stats %}
+                <tr>
+                    <td><strong>{{ o.name }}</strong></td><td>{{ o.dept }}</td>
+                    <td>{{ o.total }}</td><td class="text-success fw-bold">{{ o.resolved }}</td>
+                    <td class="text-warning">{{ o.pending }}</td>
+                    <td class="fw-bold text-info">{{ o.credits }}</td>
+                    <td><span class="badge bg-info">{{ o.level }}</span></td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const statusData = {{ status_counts|tojson }};
+const priorityData = {{ priority_counts|tojson }};
+const categoryData = {{ category_counts|tojson }};
+const deptData = {{ dept_counts|tojson }};
+
+function pie(id, data, label, colors) {
+    const ctx = document.getElementById(id);
+    if (!ctx) return;
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: Object.keys(data),
+            datasets: [{ label: label, data: Object.values(data), backgroundColor: colors }]
+        },
+        options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+    });
+}
+
+function bar(id, data, label, colors) {
+    const ctx = document.getElementById(id);
+    if (!ctx) return;
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(data),
+            datasets: [{ label: label, data: Object.values(data), backgroundColor: colors }]
+        },
+        options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+    });
+}
+
+pie('statusChart', statusData, 'Grievances', ['#6c757d','#0dcaf0','#ffc107','#198754','#0d6efd','#dc3545','#adb5bd']);
+pie('priorityChart', priorityData, 'Priority', ['#dc3545','#ffc107','#198754','#6c757d']);
+bar('categoryChart', categoryData, 'Category', ['#0d6efd','#6c757d','#ffc107']);
+bar('deptChart', deptData, 'Department', ['#0d6efd','#198754','#ffc107']);
+</script>
+{% endblock %}

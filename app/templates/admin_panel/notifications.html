@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}Notification Logs — Admin Panel{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold mb-0"><i class="bi bi-bell text-warning"></i> Notification Logs (SMS / Email)</h3>
+    <a href="{{ url_for('admin_panel.index') }}" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Back</a>
+</div>
+<div class="card border-0 shadow-sm rounded-4">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0 align-middle">
+                <thead class="bg-light"><tr><th>Time</th><th>Channel</th><th>Recipient</th><th>Subject</th><th>Message</th><th>Mode</th><th>Status</th></tr></thead>
+                <tbody>
+                {% for l in logs %}
+                <tr>
+                    <td class="small text-muted">{{ l.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td><span class="badge {% if l.channel=='email' %}bg-primary{% else %}bg-success{% endif %}">{{ l.channel }}</span></td>
+                    <td class="small">{{ l.recipient_email or l.recipient_mobile }} <small class="text-muted">({{ l.recipient_type }})</small></td>
+                    <td class="small">{{ l.subject or '—' }}</td>
+                    <td class="small">{{ l.message[:80] }}{% if l.message|length > 80 %}...{% endif %}</td>
+                    <td>{% if l.mock_mode %}<span class="badge bg-secondary">MOCK</span>{% else %}<span class="badge bg-success">Live</span>{% endif %}</td>
+                    <td><span class="badge {% if l.status=='sent' %}bg-success{% else %}bg-danger{% endif %}">{{ l.status }}</span></td>
+                </tr>
+                {% else %}
+                <tr><td colspan="7" class="text-center text-muted py-4">No notifications logged yet.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

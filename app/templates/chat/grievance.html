@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Grievance Thread — {{ g.grievance_id }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-header bg-info text-white rounded-top-4 py-3 px-4 d-flex flex-wrap justify-content-between align-items-center">
+                <div>
+                    <h4 class="mb-0 fw-bold"><i class="bi bi-chat-left-text"></i> Discussion: {{ g.grievance_id }}</h4>
+                    <small class="opacity-75">Category: {{ g.final_category if g.final_category != 'Pending Verification' else g.citizen_category }}
+                    | Status: {{ g.status }}</small>
+                </div>
+                <a href="{{ url_for('grievance.detail', grievance_id=g.grievance_id) }}" class="btn btn-light btn-sm"><i class="bi bi-arrow-left"></i> Back to grievance</a>
+            </div>
+            <div class="card-body p-0">
+                <div id="chatBox" class="p-3" style="height: 380px; overflow-y: auto; background:#f8f9fa;">
+                    {% for m in messages %}
+                    <div class="mb-2 d-flex {% if m.sender_id == current_user.id %}justify-content-end{% else %}justify-content-start{% endif %}">
+                        <div class="p-2 rounded-3 {% if m.sender_id == current_user.id %}bg-info text-white{% else %}bg-white border{% endif %}" style="max-width:70%;">
+                            <div class="small {% if m.sender_id == current_user.id %}opacity-75{% else %}text-muted{% endif %}">
+                                <strong>{{ m.sender.name }}</strong> ({{ m.sender.role.replace('_',' ')|title }})
+                                <span class="opacity-50">{{ m.created_at.strftime('%H:%M') }}</span>
+                            </div>
+                            <div>{{ m.message }}</div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="text-center text-muted py-5"><i class="bi bi-chat-left display-4 opacity-25"></i><p>No messages yet.</p></div>
+                    {% endfor %}
+                </div>
+                <form method="POST" action="{{ url_for('chat.send_grievance', grievance_id=g.grievance_id) }}" class="p-3 border-top bg-white d-flex gap-2">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="text" name="message" class="form-control" placeholder="Post a work update, share info, or ask the co-officer..." required maxlength="1000">
+                    <button type="submit" class="btn btn-info text-white"><i class="bi bi-send"></i> Send</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+    const box = document.getElementById('chatBox');
+    if (box) box.scrollTop = box.scrollHeight;
+    setInterval(() => window.location.reload(), 10000);
+});
+</script>
+{% endblock %}
+{% endblock %}

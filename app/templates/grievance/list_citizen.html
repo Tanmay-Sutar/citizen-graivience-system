@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import status_badge, priority_badge %}
+
+{% block title %}My Grievances{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold mb-2 mb-md-0"><i class="bi bi-list-task text-primary"></i> My Grievances</h3>
+    <a class="btn btn-primary" href="{{ url_for('grievance.submit') }}">
+        <i class="bi bi-plus-circle"></i> Submit New Grievance
+    </a>
+</div>
+
+{% if grievances %}
+<div class="card border-0 shadow-sm rounded-4">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0 align-middle">
+            <thead class="bg-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Submitted</th>
+                    <th>Category / Priority</th>
+                    <th>Status</th>
+                    <th>Department</th>
+                    <th>Officer</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for g in grievances %}
+                <tr>
+                    <td><span class="fw-bold text-primary">{{ g.grievance_id }}</span></td>
+                    <td class="text-muted small">{{ g.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td>
+                        <div>{{ g.final_category if g.final_category != 'Pending Verification' else g.citizen_category }}
+                            {% if g.final_category == 'Pending Verification' %}
+                            <small class="text-muted">(verif. pend.)</small>{% endif %}
+                        </div>
+                        <div>{{ priority_badge(g.final_priority) if g.final_priority != 'Pending Verification' else priority_badge(g.citizen_priority) }}</div>
+                    </td>
+                    <td>{{ status_badge(g.status) }}</td>
+                    <td>{{ g.department.name if g.department else '—' }}</td>
+                    <td class="small">{{ g.assigned_officer.name if g.assigned_officer else '—' }}</td>
+                    <td><a class="btn btn-outline-primary btn-sm" href="{{ url_for('grievance.detail', grievance_id=g.grievance_id) }}">
+                        <i class="bi bi-eye"></i> View
+                    </a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% else %}
+<div class="card border-0 shadow-sm rounded-4 text-center p-5">
+    <i class="bi bi-inbox text-muted display-1 opacity-25"></i>
+    <h5 class="mt-3 text-muted">No grievances yet</h5>
+    <p class="text-muted mb-4">Click <em>Submit New Grievance</em> to file your first complaint.</p>
+</div>
+{% endif %}
+{% endblock %}

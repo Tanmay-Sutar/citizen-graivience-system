@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import status_badge, priority_badge %}
+
+{% block title %}Verify {{ g.grievance_id }}{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <div class="col-lg-5">
+        <div class="card border-0 shadow-sm rounded-4 mb-4">
+            <div class="card-header bg-white border-bottom py-3 px-4">
+                <h5 class="mb-0 fw-bold"><i class="bi bi-info-circle"></i> Complaint Details — {{ g.grievance_id }}
+                    <span class="float-end">{{ status_badge(g.status) }}</span>
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                <img src="{{ g.image_path }}" class="img-fluid rounded-3 w-100 border mb-3" alt="Evidence" style="max-height:300px; object-fit:cover;">
+                <p class="mb-3 p-3 bg-light rounded-3">{{ g.complaint_text }}</p>
+                <div class="small text-muted">
+                    Citizen: <strong>{{ g.citizen.name }}</strong>
+                    ({{ g.citizen.mobile }}, {{ g.citizen.email }})<br>
+                    Submitted: {{ g.created_at.strftime('%Y-%m-%d %H:%M') }}
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-header bg-white border-bottom py-3 px-4">
+                <h5 class="mb-0 fw-bold"><i class="bi bi-bar-chart"></i> Citizen vs System</h5>
+            </div>
+            <div class="card-body p-4">
+                <table class="table table-sm table-hover mb-0 align-middle">
+                    <thead class="bg-light"><tr>
+                        <th>Field</th><th>Citizen</th><th>ML Suggestion</th><th>Final (editable)</th>
+                    </tr></thead>
+                    <tbody>
+                    <tr>
+                        <th>Category</th>
+                        <td>{{ g.citizen_category }}</td>
+                        <td>{{ g.ml_category }}
+                            {% if g.ml_category_confidence %}<small class="text-muted">({{ '%0.0f'|format(g.ml_category_confidence*100) }}%)</small>{% endif %}</td>
+                        <td class="text-primary fw-bold">{{ form.final_category.data }}</td>
+                    </tr>
+                    <tr>
+                        <th>Priority</th>
+                        <td>{{ priority_badge(g.citizen_priority) }}</td>
+                        <td>{{ priority_badge(g.ml_priority) if g.ml_priority else '—' }}
+                            {% if g.ml_priority_confidence %}<small class="text-muted">({{ '%0.0f'|format(g.ml_priority_confidence*100) }}%)</small>{% endif %}</td>
+                        <td class="fw-bold">{{ priority_badge(form.final_priority.data) }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="form-text mt-2 small"><i class="bi bi-lightbulb text-warning"></i>
+                    The system suggestion is derived from a TF-IDF + Logistic Regression ML model trained on historical grievances. Confirm or manually correct below.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-7">
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-header bg-success text-white rounded-top-4 py-3 px-4">
+                <h5 class="mb-0 fw-bold"><i class="bi bi-check2-square"></i> Verify &amp; Assign</h5>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" id="verifyForm" novalidate>
+                    {{ form.hidden_tag() }}
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-medium">Final Category <span class="text-danger">*</span></label>
+                            {{ form.final_category(class="form-select" + (" is-invalid" if form.final_category.errors else "")) }}
+                            {% for err in form.final_category.errors %}<div class="invalid-feedback">{{ err }}</div>{% endfor %}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-medium">Final Priority <span class="text-danger">*</span></label>
+                            {{ form.final_priority(class="form-select" + (" is-invalid" if form.final_priority.errors else "")) }}
+                            {% for err in form.final_priority.errors %}<div class="invalid-feedback">{{ err }}</div>{% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-medium">Department <span class="text-danger">*</span></label>
+                            {{ form.department_id(class="form-select" + (" is-invalid" if form.department_id.errors else "")) }}
+                            {% for err in form.department_id.errors %}<div class="invalid-feedback">{{ err }}</div>{% endfor %}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-medium">Assigned Officer</label>
+                            {{ form.assigned_officer_id(class="form-select" + (" is-invalid" if form.assigned_officer_id.errors else "")) }}
+                            <div class="form-text">Leave as "Unassigned" to use category + least-loaded auto-assignment.</div>
+                            {% for err in form.assigned_officer_id.errors %}<div class="invalid-feedback">{{ err }}</div>{% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">{{ form.note.label.text }}</label>
+                        {{ form.note(class="form-control", rows=3, placeholder="Optional note explaining corrections, assignment, or escalation.") }}
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="{{ url_for('grievance.detail', grievance_id=g.grievance_id) }}" class="btn btn-outline-secondary px-4">Cancel</a>
+                        {{ form.submit(class="btn btn-success px-5 fw-medium") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm rounded-4 mt-4">
+            <div class="card-header bg-white border-bottom py-3 px-4">
+                <h5 class="mb-0 fw-bold"><i class="bi bi-clock-history"></i> Timeline</h5>
+            </div>
+            <div class="card-body p-4" style="max-height:300px; overflow-y:auto;">
+                {% if g.timeline %}
+                    {% for t in g.timeline %}
+                    <div class="mb-3 pb-3 border-bottom">
+                        <div class="d-flex justify-content-between mb-1 small">
+                            <strong>{{ t.status_to }}</strong>
+                            <span class="text-muted">{{ t.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+                        </div>
+                        {% if t.update_note %}<div class="small">{{ t.update_note }}</div>{% endif %}
+                        {% if t.updated_by %}<small class="text-muted">by {{ t.updated_by.name }}</small>{% endif %}
+                    </div>
+                    {% endfor %}
+                {% else %}<p class="text-muted">No timeline entries.</p>{% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

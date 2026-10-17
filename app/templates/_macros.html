@@ -1,0 +1,18 @@
+{% macro status_badge(s) %}
+    {% if s == 'Submitted' %}<span class="badge bg-secondary">{{ s }}</span>
+    {% elif s == 'Assigned' %}<span class="badge bg-info text-dark">{{ s }}</span>
+    {% elif s == 'In Progress' %}<span class="badge bg-warning text-dark">{{ s }}</span>
+    {% elif s == 'Need More Information' %}<span class="badge bg-info">{{ s }}</span>
+    {% elif s == 'Resolved' %}<span class="badge bg-success">{{ s }}</span>
+    {% elif s == 'Rejected' %}<span class="badge bg-danger">{{ s }}</span>
+    {% else %}<span class="badge bg-light text-dark">{{ s }}</span>
+    {% endif %}
+{% endmacro %}
+
+{% macro priority_badge(p) %}
+    {% if p == 'High' %}<span class="badge bg-danger">{{ p }}</span>
+    {% elif p == 'Medium' %}<span class="badge bg-warning text-dark">{{ p }}</span>
+    {% elif p == 'Low' %}<span class="badge bg-success">{{ p }}</span>
+    {% else %}<span class="badge bg-secondary">{{ p }}</span>
+    {% endif %}
+{% endmacro %}

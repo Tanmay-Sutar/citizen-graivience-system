@@ -1,0 +1,181 @@
+complaint,category,priority
+"No water supply in our area for 3 days, emergency situation",Water,High
+Water pipe has burst and flooded the entire street,Water,High
+Contaminated water supply causing illness in the neighborhood,Water,High
+"Main water pipeline broken, whole colony without water",Water,High
+Sewage overflow mixing with drinking water supply,Water,High
+"Water tanker not arrived for 5 days, residents desperate",Water,High
+Underground water tank leaking severely into basement,Water,High
+Massive water leak from main supply line on main road,Water,High
+Water supply completely cut off without notice for 4 days,Water,High
+"Sewage water entering homes during heavy rain, health risk",Water,High
+Broken hydrant gushing water onto the road for hours,Water,High
+"Raw sewage flowing in open drain near school, children at risk",Water,High
+"Water contamination reported by multiple households, smell bad",Water,High
+"Flooded street due to blocked drainage, houses submerged",Water,High
+"No drinking water available, people queuing for hours",Water,High
+Burst pipe near hospital affecting water supply to patients,Water,High
+"Sewage backing up into homes, urgent repair needed",Water,High
+Water main break causing sinkhole on busy road,Water,High
+"Entire ward without water for days, no tanker support",Water,High
+"Toxic smell from water, possible chemical contamination",Water,High
+Water pipe is leaking near residential building,Water,Medium
+Low water pressure in our colony since yesterday,Water,Medium
+Water supply timing irregular for the past week,Water,Medium
+Tap water has a brownish color and strange smell,Water,Medium
+Leaking water meter causing high bill for residents,Water,Medium
+"Water tanker arrives late every day, schedule needed",Water,Medium
+Drainage blockage causing water logging after rain,Water,Medium
+"Water storage tank not cleaned for years, dirty water",Water,Medium
+Frequent water cuts during morning hours affecting daily routine,Water,Medium
+Overflowing drain near market creating unhygienic conditions,Water,Medium
+Water pressure too low to fill overhead tanks,Water,Medium
+Rusted pipes delivering discolored water to homes,Water,Medium
+Leakage from public water tap wasting water daily,Water,Medium
+"Sewer line partially blocked, slow drainage",Water,Medium
+Water bill unusually high despite normal usage,Water,Medium
+Drinking water has chlorine smell and bad taste,Water,Medium
+Underground drainage pipe leaking into garden area,Water,Medium
+"Water supply available only 2 hours a day, insufficient",Water,Medium
+"Manhole cover missing near water pipeline, danger",Water,Medium
+"Recurring water leak from same pipe, needs permanent fix",Water,Medium
+"Small water leak from garden tap, easy fix",Water,Low
+Water pressure slightly low in upper floors only,Water,Low
+Minor drip from bathroom pipe fitting,Water,Low
+Public water tap needs a new washer,Water,Low
+"Water meter glass is foggy, cannot read properly",Water,Low
+Slight discoloration in water sometimes,Water,Low
+Drain cover is loose and rattles when vehicles pass,Water,Low
+Small puddle near water tap after use,Water,Low
+"Water supply schedule changed, need confirmation",Water,Low
+Minor rust stain on the water tank lid,Water,Low
+Low flow from the community tap in afternoon,Water,Low
+"Small crack in the external water pipe, slow leak",Water,Low
+Water pressure drops briefly during peak hours,Water,Low
+"Drainage grate slightly tilted, minor issue",Water,Low
+Tap handle is loose and needs tightening,Water,Low
+Water bill seems slightly higher than usual,Water,Low
+Slight algae growth on top of water tank,Water,Low
+Public tap runs for a while after closing,Water,Low
+Minor water logging near drain after light rain,Water,Low
+Pipe insulation worn out in one small section,Water,Low
+Large pothole on main road near school causing accidents daily,Road,High
+"Road completely collapsed after heavy rain, dangerous section",Road,High
+Major sinkhole opened up on the highway overnight,Road,High
+"Bridge support cracked, road closed to traffic, urgent",Road,High
+Massive pothole causing multiple accidents near hospital,Road,High
+"Road cave in after underground pipe burst, vehicles stuck",Road,High
+"Severe road damage on busy intersection, traffic chaos",Road,High
+Landslide debris covering entire road near residential area,Road,High
+"Large pothole on sharp turn, several vehicles damaged",Road,High
+Road surface completely broken on main market street,Road,High
+"Dangerous pothole on school zone road, children at risk",Road,High
+Big crater in middle of road caused by recent rain,Road,High
+"Major road failure near bridge approach, half road gone",Road,High
+"Heavy pothole damage on bus route, passengers injured",Road,High
+"Road undermined by drainage failure, imminent collapse",Road,High
+Large depression on road causing vehicles to bottom out,Road,High
+"Main road broken near railway crossing, long traffic jams",Road,High
+"Pothole on highway exit ramp, multiple tire bursts",Road,High
+Road surface washed away in residential lane,Road,High
+"Giant pothole near bus stop, commuters falling",Road,High
+Several potholes on the road need filling before rain,Road,Medium
+Road surface has many cracks and is uneven,Road,Medium
+"Footpath broken near market, pedestrians struggling",Road,Medium
+Speed breaker damaged and needs repair,Road,Medium
+Road shoulder has eroded in several places,Road,Medium
+Uneven road surface causing discomfort to drivers,Road,Medium
+Damaged manhole cover on road causing bumpy ride,Road,Medium
+"Potholes forming near bus stop, needs attention",Road,Medium
+"Road markings faded, lane division not visible",Road,Medium
+Sidewalk tiles broken and dangerous for walking,Road,Medium
+Cracks appearing on newly laid road surface,Road,Medium
+Road drainage blocked causing water accumulation,Road,Medium
+Pothole on service road near residential area,Road,Medium
+Broken speed breaker creating hazard for two wheelers,Road,Medium
+Damaged road divider exposing sharp metal edges,Road,Medium
+Potholes on the approach road to colony gate,Road,Medium
+Rough road surface causing vehicle damage complaints,Road,Medium
+"Missing road sign at intersection, confusion among drivers",Road,Medium
+Pedestrian crossing paint completely worn off,Road,Medium
+"Potholes accumulating water during rain, mosquitoes",Road,Medium
+Small pothole on side road near residential area,Road,Low
+"Minor crack on the road surface, no immediate danger",Road,Low
+Road paint slightly faded in one section,Road,Low
+Small debris on shoulder of the road,Road,Low
+Minor unevenness on the road near parking area,Road,Low
+Small piece of road edge chipped off,Road,Low
+"Pothole is small and shallow, low risk",Road,Low
+Road marking needs minor touch up,Road,Low
+Slight dip in road surface near drain cover,Road,Low
+Minor gravel scattered on one side of road,Road,Low
+"Small crack near the curb, easy to fix",Road,Low
+Road shoulder has minor wear from traffic,Road,Low
+Minor pothole on quiet residential lane,Road,Low
+Slight roughness on road surface in spots,Road,Low
+"Broken tile on sidewalk, small area only",Road,Low
+Minor loose gravel on the edge of road,Road,Low
+Road surface has small patches of wear,Road,Low
+"Slight depression near drain, minor water pooling",Road,Low
+Minor crack on speed breaker surface,Road,Low
+Small pothole in parking area of market,Road,Low
+Electric wire has fallen on road extremely dangerous live wire,Electricity,High
+Transformer exploded and caught fire near residential area,Electricity,High
+High tension wire snapped and lying on the road,Electricity,High
+Electric pole leaning dangerously over the street,Electricity,High
+Power outage affecting entire city block for 12 hours,Electricity,High
+"Sparking from main electric line near school, fire risk",Electricity,High
+"Live electric wire fallen near playground, children playing",Electricity,High
+"Electric shock from street light pole, someone injured",Electricity,High
+"Substation on fire, smoke and sparks visible",Electricity,High
+Exposed live wires after tree fell on power line,Electricity,High
+"Electric cable burning on the road, traffic stopped",Electricity,High
+Power transformer leaking oil and smoking heavily,Electricity,High
+"Electric wire fallen on water logged road, electrocution risk",Electricity,High
+High voltage wire sagging dangerously low over road,Electricity,High
+"Electric box exploded, blackout in the whole ward",Electricity,High
+"Burning electric wire near gas cylinder shop, explosion risk",Electricity,High
+"Power cable fallen across main road, vehicles swerving",Electricity,High
+"Severe electric shock from metro pillar, urgent",Electricity,High
+Electric pole fire spreading to nearby trees,Electricity,High
+Major power failure affecting hospital and emergency services,Electricity,High
+Street light not working in dark crime prone area near park,Electricity,Medium
+"Multiple street lights out in residential block, safety issue",Electricity,Medium
+Frequent power cuts every evening for the past week,Electricity,Medium
+Electric meter box making buzzing sound and sparking,Electricity,Medium
+Voltage fluctuation damaging household appliances,Electricity,Medium
+"Street light pole rusted and unstable, may fall",Electricity,Medium
+"Power outage for 6 hours daily, affecting study for students",Electricity,Medium
+"Electric cable exposed on footpath, people tripping",Electricity,Medium
+Transformer humming loudly and vibrating,Electricity,Medium
+"Low voltage in entire colony, ACs and motors not running",Electricity,Medium
+"Street light stays on during the day, wasting electricity",Electricity,Medium
+Electric wires hanging loose above the footpath,Electricity,Medium
+Power cut happens every time it rains,Electricity,Medium
+"Billing error, charged for twice the actual usage",Electricity,Medium
+Faulty street light flickering on and off,Electricity,Medium
+Electric junction box open and wires exposed,Electricity,Medium
+High electricity bill despite minimal usage,Electricity,Medium
+Power fluctuation causing lights to dim frequently,Electricity,Medium
+Street light out near the women hostel entrance,Electricity,Medium
+Old electric wiring in pole sparking during rain,Electricity,Medium
+Single street light bulb not working in a lane,Electricity,Low
+Small light fixture on pole needs new bulb,Electricity,Low
+Street light is dim in the evening,Electricity,Low
+"Minor spark from switch box, low risk",Electricity,Low
+One street light flickers slightly sometimes,Electricity,Low
+Electric meter reading display is dim,Electricity,Low
+Small crack on the street light pole base,Electricity,Low
+Low wattage bulb on community road,Electricity,Low
+"Minor billing discrepancy, small amount",Electricity,Low
+Street light turns on slightly late,Electricity,Low
+Small exposed wire end taped but needs sealing,Electricity,Low
+Light sensor on street light not working properly,Electricity,Low
+Minor voltage dip during peak hours only,Electricity,Low
+One bulb in the street light cluster is out,Electricity,Low
+Small rust spot on electric pole,Electricity,Low
+Street light pole number plate missing,Electricity,Low
+Minor humming from street light fixture,Electricity,Low
+Slight delay in power restoration after minor cuts,Electricity,Low
+Low brightness on one section of the road,Electricity,Low
+Small wiring issue in the public phone booth,Electricity,Low

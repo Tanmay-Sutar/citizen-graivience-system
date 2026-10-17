@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - Citizen Grievance System{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="jumbotron bg-white rounded-4 shadow-sm p-5 mb-4">
+            <h1 class="display-5 fw-bold text-primary mb-3">
+                <i class="bi bi-megaphone-fill"></i> Voice Your Grievances
+            </h1>
+            <p class="lead text-muted mb-4">
+                A transparent, ML-powered platform for citizens to submit complaints and track resolution by department officials.
+            </p>
+            <hr class="my-4">
+            <div class="d-flex flex-wrap gap-2">
+                <a class="btn btn-primary btn-lg" href="{{ url_for('auth.register_citizen') }}">
+                    <i class="bi bi-person-plus"></i> Register as Citizen
+                </a>
+                <a class="btn btn-outline-primary btn-lg" href="{{ url_for('auth.login') }}">
+                    <i class="bi bi-box-arrow-in-right"></i> Login
+                </a>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="bi bi-camera2 text-primary display-4 mb-3"></i>
+                        <h5 class="card-title">Photo Evidence</h5>
+                        <p class="card-text text-muted small">Mandatory camera capture ensures genuine complaints with visual proof.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="bi bi-brain text-success display-4 mb-3"></i>
+                        <h5 class="card-title">ML-Powered Routing</h5>
+                        <p class="card-text text-muted small">NLP automatically categorizes and prioritizes your grievance.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <i class="bi bi-clock-history text-warning display-4 mb-3"></i>
+                        <h5 class="card-title">Track Progress</h5>
+                        <p class="card-text text-muted small">Real-time timeline updates with officer communication &amp; SMS/email alerts.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mt-2">
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-transparent">
+                        <h6 class="mb-0"><i class="bi bi-diagram-3 text-primary"></i> How It Works</h6>
+                    </div>
+                    <div class="card-body">
+                        <ol class="mb-0">
+                            <li class="mb-2">Citizen registers and captures photo via webcam</li>
+                            <li class="mb-2">ML system suggests category and priority</li>
+                            <li class="mb-2">Officer verifies and assigns to department</li>
+                            <li class="mb-2">Officer works on grievance with regular updates</li>
+                            <li>Grievance resolved; credits awarded to officer</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-transparent">
+                        <h6 class="mb-0"><i class="bi bi-buildings text-primary"></i> Departments Covered</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex flex-column gap-2">
+                            <span class="badge bg-info text-dark p-2 rounded"><i class="bi bi-droplet"></i> Water Department</span>
+                            <span class="badge bg-secondary p-2 rounded"><i class="bi bi-signpost-split"></i> Road Department</span>
+                            <span class="badge bg-warning text-dark p-2 rounded"><i class="bi bi-lightbulb"></i> Electricity Department</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

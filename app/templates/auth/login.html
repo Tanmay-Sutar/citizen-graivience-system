@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}Login - Citizen Grievance System{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-5 col-md-7">
+        <div class="card border-0 shadow-lg rounded-4">
+            <div class="card-body p-5">
+                <div class="text-center mb-4">
+                    <i class="bi bi-box-arrow-in-right text-primary display-3"></i>
+                    <h2 class="mt-2 fw-bold">Sign In</h2>
+                    <p class="text-muted">Choose your role and enter credentials</p>
+                </div>
+
+                <form method="POST" novalidate>
+                    {{ form.hidden_tag() }}
+
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">Login As</label>
+                        {{ form.role(class="form-select form-select-lg" + (" is-invalid" if form.role.errors else "")) }}
+                        {% for err in form.role.errors %}
+                            <div class="invalid-feedback">{{ err }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">Email Address</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                            {{ form.email(class="form-control form-control-lg" + (" is-invalid" if form.email.errors else ""), placeholder="you@example.com") }}
+                            {% for err in form.email.errors %}
+                                <div class="invalid-feedback">{{ err }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-medium">Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                            {{ form.password(class="form-control form-control-lg" + (" is-invalid" if form.password.errors else ""), placeholder="Your password") }}
+                            {% for err in form.password.errors %}
+                                <div class="invalid-feedback">{{ err }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="mb-3 form-check">
+                        {{ form.remember(class="form-check-input") }}
+                        <label class="form-check-label text-muted">{{ form.remember.label.text }}</label>
+                    </div>
+
+                    <div class="d-grid">
+                        {{ form.submit(class="btn btn-primary btn-lg fw-medium") }}
+                    </div>
+                </form>
+
+                <div class="mt-4 text-center">
+                    <p class="mb-1 text-muted">New citizen? <a href="{{ url_for('auth.register_citizen') }}" class="text-primary fw-medium">Register here</a></p>
+                    <p class="mb-0 text-muted">New officer? <a href="{{ url_for('auth.register_officer') }}" class="text-primary fw-medium">Apply here</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

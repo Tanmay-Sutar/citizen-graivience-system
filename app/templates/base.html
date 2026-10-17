@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Citizen Grievance System{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="{{ url_for('main.index') }}">
+                <i class="bi bi-clipboard2-check me-2 fs-3"></i>
+                <span>Citizen Grievance System</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-lg-center">
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item me-lg-3">
+                            <span class="navbar-text text-white">
+                                <i class="bi bi-person-circle"></i>
+                                {{ current_user.name }}
+                                <span class="badge bg-light text-primary ms-1">{{ current_user.role.replace('_', ' ').title() }}</span>
+                            </span>
+                        </li>
+                        {% if current_user.role == 'citizen' %}
+                        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('dashboard.citizen') }}"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('grievance.submit') }}"><i class="bi bi-camera2"></i> Submit</a></li>
+                        {% elif current_user.role == 'officer' %}
+                        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('dashboard.officer') }}"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('chat.department_chat') }}"><i class="bi bi-chat"></i> Chat</a></li>
+                        {% elif current_user.role == 'co_officer' %}
+                        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('dashboard.co_officer') }}"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('chat.department_chat') }}"><i class="bi bi-chat"></i> Chat</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('stats.index') }}"><i class="bi bi-bar-chart"></i> Stats</a></li>
+                        {% elif current_user.role == 'main_authority' %}
+                        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('dashboard.admin') }}"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('admin_panel.index') }}"><i class="bi bi-shield-lock"></i> Panel</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('stats.index') }}"><i class="bi bi-bar-chart"></i> Stats</a></li>
+                        {% endif %}
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-outline-light btn-sm" href="{{ url_for('auth.logout') }}">
+                                <i class="bi bi-box-arrow-right"></i> Logout
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="bi bi-person-plus"></i> Register
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="{{ url_for('auth.register_citizen') }}">As Citizen</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('auth.register_officer') }}">As Officer / Co-Officer</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item ms-lg-2">
+                            <a class="nav-link btn btn-outline-light btn-sm" href="{{ url_for('auth.login') }}">
+                                <i class="bi bi-box-arrow-in-right"></i> Login
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container py-4">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category if category != 'message' else 'info' }} alert-dismissible fade show" role="alert">
+                        <i class="bi bi-info-circle me-1"></i>
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-dark text-white mt-5 py-4">
+        <div class="container text-center">
+            <p class="mb-0">&copy; {{ 2026 }} Citizen Grievance System. Academic Project.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import status_badge, priority_badge %}
+
+{% block title %}Main Authority — Full Panel{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold mb-2 mb-md-0"><i class="bi bi-shield-lock"></i> Main Authority Control Panel</h3>
+    <div class="d-flex gap-2 flex-wrap">
+        <a href="{{ url_for('admin_panel.users') }}" class="btn btn-outline-primary"><i class="bi bi-people"></i> Users</a>
+        <a href="{{ url_for('admin_panel.performance') }}" class="btn btn-outline-info"><i class="bi bi-trophy"></i> Performance</a>
+        <a href="{{ url_for('admin_panel.notifications') }}" class="btn btn-outline-warning"><i class="bi bi-bell"></i> Notifications</a>
+        <a href="{{ url_for('stats.index') }}" class="btn btn-warning"><i class="bi bi-bar-chart"></i> Stats Charts</a>
+    </div>
+</div>
+
+{% if pending_approvals %}
+<div class="card border-warning shadow-sm mb-4">
+    <div class="card-header bg-warning text-dark"><h5 class="mb-0"><i class="bi bi-person-check"></i> Pending Officer Approvals</h5></div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table mb-0">
+                <thead class="bg-light"><tr><th>Name</th><th>Email</th><th>Mobile</th><th>Role</th><th>Dept</th><th>Area</th><th>Registered</th><th></th></tr></thead>
+                <tbody>
+                {% for u in pending_approvals %}
+                <tr>
+                    <td><strong>{{ u.name }}</strong></td><td>{{ u.email }}</td><td>{{ u.mobile }}</td>
+                    <td>{{ u.role.replace('_',' ')|title }}</td>
+                    <td>{{ u.department.name if u.department else '—' }}</td>
+                    <td>{{ u.area or '—' }}</td>
+                    <td class="text-muted small">{{ u.created_at.strftime('%Y-%m-%d') }}</td>
+                    <td>
+                        <a href="{{ url_for('admin_panel.approve_officer', user_id=u.id) }}" class="btn btn-success btn-sm"><i class="bi bi-check"></i> Approve</a>
+                        <a href="{{ url_for('admin_panel.reject_officer', user_id=u.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Reject this application?')"><i class="bi bi-x"></i> Reject</a>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="row g-3 mb-4">
+    <div class="col-md-2"><div class="card border-0 shadow-sm"><div class="card-body text-center"><p class="text-muted small mb-1">Total Users</p><h3 class="fw-bold mb-0">{{ stats.total_users }}</h3></div></div></div>
+    <div class="col-md-2"><div class="card border-0 shadow-sm"><div class="card-body text-center"><p class="text-muted small mb-1">Grievances</p><h3 class="fw-bold mb-0">{{ stats.total_grievances }}</h3></div></div></div>
+    <div class="col-md-2"><div class="card border-0 shadow-sm"><div class="card-body text-center"><p class="text-muted small mb-1">Pending</p><h3 class="fw-bold mb-0 text-warning">{{ stats.pending }}</h3></div></div></div>
+    <div class="col-md-2"><div class="card border-0 shadow-sm"><div class="card-body text-center"><p class="text-muted small mb-1">Resolved</p><h3 class="fw-bold mb-0 text-success">{{ stats.resolved }}</h3></div></div></div>
+    <div class="col-md-2"><div class="card border-0 shadow-sm"><div class="card-body text-center"><p class="text-muted small mb-1">Departments</p><h3 class="fw-bold mb-0 text-primary">{{ departments|length }}</h3></div></div></div>
+    <div class="col-md-2"><div class="card border-0 shadow-sm"><div class="card-body text-center"><p class="text-muted small mb-1">Unassigned</p><h3 class="fw-bold mb-0 text-danger">{{ stats.unassigned }}</h3></div></div></div>
+</div>
+
+<div class="card border-0 shadow-sm rounded-4">
+    <div class="card-header bg-white border-bottom py-3 px-4"><h5 class="mb-0 fw-bold"><i class="bi bi-list-task"></i> All Grievances</h5></div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0 align-middle">
+                <thead class="bg-light"><tr><th>ID</th><th>Citizen</th><th>Complaint</th><th>Category</th><th>Priority</th><th>Status</th><th>Dept</th><th>Officer</th><th></th></tr></thead>
+                <tbody>
+                {% for g in grievances %}
+                <tr>
+                    <td><span class="fw-bold text-primary">{{ g.grievance_id }}</span></td>
+                    <td class="small">{{ g.citizen.name }}</td>
+                    <td class="small">{{ g.complaint_text[:45] }}...</td>
+                    <td>{{ g.final_category if g.final_category != 'Pending Verification' else g.citizen_category }}</td>
+                    <td>{{ priority_badge(g.final_priority if g.final_priority != 'Pending Verification' else g.citizen_priority) }}</td>
+                    <td>{{ status_badge(g.status) }}</td>
+                    <td class="small">{{ g.department.name if g.department else '—' }}</td>
+                    <td class="small">{{ g.assigned_officer.name if g.assigned_officer else '—' }}</td>
+                    <td>
+                        <a class="btn btn-outline-primary btn-sm" href="{{ url_for('grievance.detail', grievance_id=g.grievance_id) }}"><i class="bi bi-eye"></i></a>
+                        <a class="btn btn-outline-success btn-sm" href="{{ url_for('grievance.verify', grievance_id=g.grievance_id) }}"><i class="bi bi-check2-square"></i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

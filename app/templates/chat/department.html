@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}Department Chat{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-header bg-primary text-white rounded-top-4 py-3 px-4">
+                <h4 class="mb-0 fw-bold"><i class="bi bi-chat-dots"></i> Department Chat
+                    <span class="badge bg-light text-primary ms-2">
+                        {{ departments|selectattr('id','equalto',department_id)|map(attribute='name')|first if department_id else 'Select Dept' }}
+                    </span>
+                </h4>
+                <p class="mb-0 small opacity-75">Officers &amp; Co-Officers collaborate here. Restricted to your department.</p>
+            </div>
+            <div class="card-body p-0">
+                <div class="p-3 border-bottom bg-light">
+                    {% if departments %}
+                    <form method="GET" class="d-flex gap-2 align-items-end">
+                        <div class="flex-grow-1">
+                            <label class="form-label small fw-medium">Select Department</label>
+                            <select name="department_id" class="form-select form-select-sm" onchange="this.form.submit()">
+                                {% for d in departments %}
+                                <option value="{{ d.id }}" {% if d.id==department_id %}selected{% endif %}>{{ d.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </form>
+                    {% endif %}
+                </div>
+
+                <div id="chatBox" class="p-3" style="height: 420px; overflow-y: auto; background: #f8f9fa;">
+                    {% for m in messages %}
+                    <div class="mb-2 d-flex {% if m.sender_id == current_user.id %}justify-content-end{% else %}justify-content-start{% endif %}">
+                        <div class="p-2 rounded-3 {% if m.sender_id == current_user.id %}bg-primary text-white{% else %}bg-white border{% endif %}" style="max-width:70%;">
+                            <div class="small {% if m.sender_id == current_user.id %}opacity-75{% else %}text-muted{% endif %}">
+                                <strong>{{ m.sender.name }}</strong> ({{ m.sender.role.replace('_',' ')|title }})
+                                <span class="opacity-50">{{ m.created_at.strftime('%H:%M') }}</span>
+                            </div>
+                            <div>{{ m.message }}</div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="text-center text-muted py-5"><i class="bi bi-chat-left display-4 opacity-25"></i><p>No messages yet. Start the conversation!</p></div>
+                    {% endfor %}
+                </div>
+
+                <form method="POST" action="{{ url_for('chat.send_department') }}" class="p-3 border-top bg-white d-flex gap-2">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="department_id" value="{{ department_id }}">
+                    <input type="text" name="message" class="form-control" placeholder="Type a message..." required maxlength="1000">
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-send"></i> Send</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+    const box = document.getElementById('chatBox');
+    if (box) box.scrollTop = box.scrollHeight;
+    setInterval(() => window.location.reload(), 10000);
+});
+</script>
+{% endblock %}
+{% endblock %}
